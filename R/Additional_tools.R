@@ -39,10 +39,7 @@ RK4_matrix <- function(a, b, n, A){
 #' @param step_size Step size of the grid.
 #' @param Lambda A given matrix function.
 #'
-#' @return A list concerning jump times and states, with the first time being the initial time t and state and the last time being tn (if not absorbed)
-#'
-#' @import stats
-#' @import utils
+#' @return The product integral of the given matrix function.
 #'
 #' @export
 prodint <- function(start, end, step_size, Lambda){
