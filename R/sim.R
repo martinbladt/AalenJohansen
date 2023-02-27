@@ -18,7 +18,7 @@ sim_jump <- function(i, t, u = 0, tn, rate, dist, b = NA){
 }
 
 #' Simulate the path of a time-inhomogeneous (semi-)Markov process until a maximal time
-#' 
+#'
 #' @param i The initial state, integer.
 #' @param t The initial time, numeric.
 #' @param u The initial duration (since the last transition), numeric. By default equal to zero
@@ -29,11 +29,14 @@ sim_jump <- function(i, t, u = 0, tn, rate, dist, b = NA){
 #' @param bs Vector of upper bounds on the total transition rates. By default the bounds are determined using optimize, which might only identify a local maximum.
 #'
 #' @return A list concerning jump times and states, with the first time being the initial time t and state and the last time being tn (if not absorbed)
-#' 
-#' @export 
-#'  
+#'
+#' @import stats
+#' @import utils
+#'
+#' @export
+#'
 #' @examples
-#'  
+#'
 #' jump_rate <- function(i, t, u){if(i == 1){3*t} else if(i == 2){5*t} else{0}}
 #' mark_dist <- function(i, s, v){if(i == 1){c(0, 1/3, 2/3)} else if(i == 2){c(1/5, 0, 4/5)} else{0}}
 #' sim <- sim_path(sample(1:2, 1), t = 0, tn = 2, rates = jump_rate, dists = mark_dist)
