@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 Bla bla bla 
 
-## 1. Markov model with independent censoring and covariates
+## 1. Markov model with independent censoring
 
 We start out with a simple Markov model.
 
@@ -31,5 +31,54 @@ We start out with a simple Markov model.
 
 ```{r setup}
 library(AalenJohansen)
+1+2+2
+```
+
+
+## 2. Markov model with independent censoring and covariates
+
+
+\begin{align*}
+\frac{\mathrm{d}\Lambda(t|x)}{\mathrm{d}t}=\lambda(t|x)=\frac{1}{1+x\cdot t}\cdot \begin{pmatrix}
+-3 & 1& 1 & 1\\
+2 & -5 & 1 & 2\\
+1 & 1& -4 & 2\\
+0 & 0& 0 & 0
+\end{pmatrix}
+\end{align*}
+
+```{r}
+1+2+2
+```
+
+## 3. Markov model with dependent censoring and covariates
+
+
+\begin{align*}
+\frac{\mathrm{d}\Lambda(t|x)}{\mathrm{d}t}=\lambda(t|x)=\frac{1}{1+x\cdot t}\cdot \begin{pmatrix}
+-3 & 1& 1 & 1\\
+2 & -5 & 1 & 2\\
+1 & 1& -4 & 2\\
+0 & 0& 0 & 0
+\end{pmatrix}
+\end{align*}
+
+```{r}
+1+2+2
+```
+
+## 4. Semi-Markov model with independent censoring
+
+
+\begin{align*}
+\frac{\mathrm{d}\Lambda(t|x)}{\mathrm{d}t}=\lambda(t|x)=\frac{1}{1+x\cdot t}\cdot \begin{pmatrix}
+-3 & 1& 1 & 1\\
+2 & -5 & 1 & 2\\
+1 & 1& -4 & 2\\
+0 & 0& 0 & 0
+\end{pmatrix}
+\end{align*}
+
+```{r}
 1+2+2
 ```
