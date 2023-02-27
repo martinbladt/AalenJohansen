@@ -4,7 +4,14 @@
 \alias{aalen_johansen}
 \title{Compute the conditional Aalen-Johansen estimator.}
 \usage{
-aalen_johansen(data, x = NA, a = NA, p = NA, alpha = 0.05, collapse = FALSE)
+aalen_johansen(
+  data,
+  x = NULL,
+  a = NULL,
+  p = NULL,
+  alpha = 0.05,
+  collapse = FALSE
+)
 }
 \arguments{
 \item{data}{A list of trajectory data for each individual.}

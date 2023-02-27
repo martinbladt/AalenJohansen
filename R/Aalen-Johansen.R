@@ -10,18 +10,18 @@
 #' @return A list containing the Aalen-Johansen estimator, the Nelson-Aalen estimator, and related quantities.
 #' @export
 #'
-aalen_johansen <- function(data, x = NA, a = NA, p = NA, alpha = 0.05, collapse = FALSE){
+aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, collapse = FALSE){
 
   # Get the relevant data by filtering for rows where (x - X)/a is within -1/2 and 1/2
   n <- length(data)
   is_unconditional <- is.null(x)
   if(!is_unconditional && is.null(data[[1]]$X)) stop("Provide covariate information in data")
-  if(is_unconditional){relevant_data <- data}else{
+  if(is_unconditional){relevant_data <- 1:n}else{
     X <- unlist(lapply(data, FUN = function(Z) Z$X))
-    if(is.na(a)){
+    if(is.null(a)){
       pvl <- ecdf(X)(x)
-      upper <- quantile(X, pvl + alpha/2)
-      lower <- quantile(X, pvl - alpha/2)
+      upper <- quantile(X, min(1,pvl + alpha/2))
+      lower <- quantile(X, max(0,pvl - alpha/2))
       relevant_data <- which((X<=upper)&(X>=lower))
     }else{
       relevant_data <- which(((x - X)/a<=1/2)&((x - X)/a>=-1/2))
@@ -30,7 +30,7 @@ aalen_johansen <- function(data, x = NA, a = NA, p = NA, alpha = 0.05, collapse 
   data_x <- data[relevant_data]
   prop <- length(relevant_data)/n
   n_x <- length(data_x)
-  if(is.na(p)) p <- max(unique(unlist(lapply(data_x, function(Z) Z$states)))) - 1
+  if(is.null(p)) p <- max(unique(unlist(lapply(data_x, function(Z) Z$states)))) - 1
 
   # Initialize output lists
   out <- out2 <- list()
