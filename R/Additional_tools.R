@@ -37,10 +37,10 @@ RK4_matrix <- function(a, b, n, A){
 #' @param start Start time.
 #' @param end End time.
 #' @param step_size Step size of the grid.
-#' @param Lambda A given matrix function.
+#' @param lambda A given matrix function.
 #'
 #' @return The product integral of the given matrix function.
 #'
 #' @export
-prodint <- function(start, end, step_size, Lambda){
-  RK4_matrix(start, end, end/step_size, Lambda)}
+prodint <- function(start, end, step_size, lambda){
+  RK4_matrix(start, end, end/step_size, lambda)}
