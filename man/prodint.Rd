@@ -4,7 +4,7 @@
 \alias{prodint}
 \title{Calculate the product integral of a matrix function}
 \usage{
-prodint(start, end, step_size, Lambda)
+prodint(start, end, step_size, lambda)
 }
 \arguments{
 \item{start}{Start time.}
@@ -13,7 +13,7 @@ prodint(start, end, step_size, Lambda)
 
 \item{step_size}{Step size of the grid.}
 
-\item{Lambda}{A given matrix function.}
+\item{lambda}{A given matrix function.}
 }
 \value{
 The product integral of the given matrix function.
