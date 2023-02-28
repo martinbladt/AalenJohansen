@@ -1,5 +1,8 @@
 ---
-title: "Conditional Nelson--Aalen and Aalen--Johansen Estimation "
+title: "Conditional Nelson--Aalen and Aalen--Johansen Estimation"
+author: "Martin Bladt & Christian Furrer"
+date: "28th of February, 2023"
+package: "AalenJohansen"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{my-vignette}
@@ -14,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette illustrates, through four examples, the potential uses of the R-package $\texttt{AalenJohansen}$, which implements the conditional Nelson--Aalen and Aalen--Johansen estimators introduced in Bladt \& Furrer (2023).
+This vignette illustrates, through four examples, the potential uses of the R-package $\texttt{AalenJohansen}$, which is an implementation of the conditional Nelson--Aalen and Aalen--Johansen estimators introduced in Bladt \& Furrer (2023).
 
 ## 1. Markov model with independent censoring
 
