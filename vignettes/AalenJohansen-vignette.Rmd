@@ -322,10 +322,10 @@ mark_dist <- function(i, s, v){
 }
 ```
 
-We simulate $1,0000$ independent and identically distributed realizations subject to independent right-censoring. Right-censoring follows the distribution $\text{Unif}(10,40)$.
+We simulate $5,000$ independent and identically distributed realizations subject to independent right-censoring. Right-censoring follows the distribution $\text{Unif}(10,40)$.
 
 ```{r}
-n <- 10000
+n <- 5000
 
 c <- runif(n, 10, 40)
 
