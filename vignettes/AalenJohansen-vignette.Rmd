@@ -322,10 +322,10 @@ mark_dist <- function(i, s, v){
 }
 ```
 
-We simulate $1,000$ independent and identically distributed realizations subject to independent right-censoring. Right-censoring follows the distribution $\text{Unif}(10,40)$.
+We simulate $1,0000$ independent and identically distributed realizations subject to independent right-censoring. Right-censoring follows the distribution $\text{Unif}(10,40)$.
 
 ```{r}
-n <- 1000
+n <- 10000
 
 c <- runif(n, 10, 40)
 
@@ -381,7 +381,7 @@ The degree of sub-sampling is
 length(landmark) / n
 ```
 
-Next, we fit the conditional Aalen--Johansen estimator for $u=1,5$.
+Next, we fit the conditional Aalen--Johansen estimator for $u=1,5$. We also fit the usual landmark Aalen--Johansen estimator.
 
 ```{r}
 u1 <- 1
@@ -389,15 +389,18 @@ u2 <- 5
 
 fit1 <- aalen_johansen(landmark, x = u1)
 fit2 <- aalen_johansen(landmark, x = u2)
+fit3 <- aalen_johansen(landmark)
 ```
 
-For illustrative purposes, we plot the conditional state occupation probability $p_2$ using the conditional estimator (dashed) and the true model (full). This is done for both $u=1$ (in red) and $u=5$ (in blue).
+For illustrative purposes, we plot the conditional state occupation probability $p_2$ using the conditional estimator (dashed), the usual landmark estimator (dotted), and the true model (full). This is done for both $u=1$ (in red) and $u=5$ (in blue).
 
 ```{r, fig.align = 'center', fig.height = 4.5, fig.width = 4.5}
 v10 <- fit1$t
 v20 <- fit2$t
+v30 <- fit3$t
 p1 <- unlist(lapply(fit1$p, FUN = function(L) L[2]))
 p2 <- unlist(lapply(fit2$p, FUN = function(L) L[2]))
+p3 <- unlist(lapply(fit3$p, FUN = function(L) L[2]))
 P <- function(t, u){
   exp(-(t-10)*0.09-(t^2-100)*0.0005-pmax(0, pmin(t, 4-(u-10))-10)*0.20)  
 } 
@@ -407,4 +410,5 @@ plot(v10, p1, type = "l", lty = 2, xlab = "", ylab = "", main = "Probability",
 lines(seq(10, 40, 0.1), P(seq(10, 40, 0.1), u1), col = "red")
 lines(v20, p2, lty = 2, col = "blue")
 lines(seq(10, 40, 0.1), P(seq(10, 40, 0.1), u2), col = "blue")
+lines(v30, p3, lty = 3)
 ```
