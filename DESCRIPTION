@@ -7,8 +7,7 @@ Authors@R: c(person("Martin", "Bladt", email = "martinbladt@math.ku.dk", role = 
               role = "aut")
               )
 Maintainer: Martin Bladt <martinbladt@math.ku.dk>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: This package contains the conditional Nelson--Aalen and Aalen--Johansen estimators.
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
