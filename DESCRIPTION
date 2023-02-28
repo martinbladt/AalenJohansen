@@ -7,8 +7,7 @@ Authors@R: c(person("Martin", "Bladt", email = "martinbladt@math.ku.dk", role = 
               role = "aut")
               )
 Maintainer: Martin Bladt <martinbladt@math.ku.dk>
-Description: Provides the conditional Nelson-Aalen and Aalen-Johansen estimators.
-The methods are based on Bladt & Furrer (2023), in preparation.
+Description: Provides the conditional Nelson-Aalen and Aalen-Johansen estimators. The methods are based on Bladt & Furrer (2023), in preparation.
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
