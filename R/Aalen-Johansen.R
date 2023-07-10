@@ -6,11 +6,12 @@
 #' @param p An integer representing the number of states. The absorbing state is last.
 #' @param alpha A probability around the point x, for asymmetric sub-sampling.
 #' @param collapse Logical, whether to collapse the last state of the model.
+#' @param L_tr Logical, whether first state refers to left-truncation (augmentation).
 #'
 #' @return A list containing the Aalen-Johansen estimator, the Nelson-Aalen estimator, and related quantities.
 #' @export
 #'
-aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, collapse = FALSE){
+aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, collapse = FALSE, L_tr = FALSE){
 
   # Get the relevant data by filtering for rows where (x - X)/a is within -1/2 and 1/2
   n <- length(data)
@@ -125,6 +126,7 @@ aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, col
 
   # Compute the Aalen-Johansen estimator using difference equations
   aj <- list()
+  if(L_tr){I0[1] <- 0; I0 <- I0/sum(I0)}
   aj[[1]] <- I0
   Delta <- cumsums[[1]]
   aj[[2]] <- aj[[1]] + as.vector(aj[[1]] %*% Delta) - aj[[1]] * rowSums(Delta)
