@@ -52,28 +52,11 @@ sim_trunc <- mapply(FUN = function(Z,l){
   o
 },sim,L,SIMPLIFY = F)
 
-sim_trunc
-#sim[[1]]
-L[1]
 sim_trunc <- sim_trunc[!sapply(sim_trunc,is.null)]
-
-
-## now we do an augmented model
-#p <- max(unlist(lapply(sim_trunc, FUN = function(Z) Z$states)))
-
-sim_aug <- mapply(FUN = function(Z){
-  o <- Z
-  o$states <- o$states + 1
-  if(head(o$times,1)>0){o$times <- c(0,o$times); o$states <- c(1,o$states)}
-  o
-},sim_trunc, SIMPLIFY = F)
 
 ## now the fitting
 # Extract initial status for each individual
-fit <- aalen_johansen(sim_aug,L_tr = TRUE)
-
-fit$p <- lapply(fit$p, FUN = function(Z) Z[-1])
-fit$Lambda <- lapply(fit$Lambda, FUN = function(Z) Z[-1,-1])
+fit <- aalen_johansen(sim_trunc)
 
 ## now plot
 v1 <- unlist(lapply(fit$Lambda, FUN = function(L) L[2,1]))

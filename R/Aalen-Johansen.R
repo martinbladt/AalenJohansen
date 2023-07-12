@@ -6,12 +6,22 @@
 #' @param p An integer representing the number of states. The absorbing state is last.
 #' @param alpha A probability around the point x, for asymmetric sub-sampling.
 #' @param collapse Logical, whether to collapse the last state of the model.
-#' @param L_tr Logical, whether first state refers to left-truncation (augmentation).
 #'
 #' @return A list containing the Aalen-Johansen estimator, the Nelson-Aalen estimator, and related quantities.
 #' @export
 #'
-aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, collapse = FALSE, L_tr = FALSE){
+aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, collapse = FALSE){
+
+  # Determine left-truncation, and create possible augmented model
+  L_tr <- sum(unlist(lapply(data, FUN = function(Z) Z$times[1]>0 ))) > 0
+  if(L_tr){
+    data <- mapply(FUN = function(Z){
+      o <- Z
+      o$states <- o$states + 1
+      if(head(o$times,1)>0){o$times <- c(0,o$times); o$states <- c(1,o$states)}
+      o
+    },data, SIMPLIFY = F)
+  }
 
   # Get the relevant data by filtering for rows where (x - X)/a is within -1/2 and 1/2
   n <- length(data)
@@ -137,6 +147,12 @@ aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, col
 
   # Final touch: adding the diagonal to the Nelson-Aalen estimator
   cumsums <- append(list(matrix(0,p+1,p+1)),lapply(cumsums, FUN = function(M){M_out <- M; diag(M_out) <- -rowSums(M); M_out}))
+
+  # Final touch on left-truncation
+  if(L_tr){
+    aj <- lapply(aj, FUN = function(Z) Z[-1])
+    cumsums <- lapply(cumsums, FUN = function(Z) Z[-1,-1])
+  }
 
   # Return output as a list
   return(list(p = aj, Lambda = cumsums, N = out, I0 = I0, It = It, t = ordered_times))
