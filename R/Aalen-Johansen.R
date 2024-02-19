@@ -2,9 +2,8 @@
 #'
 #' @param data A list of trajectory data for each individual.
 #' @param x A numeric value for conditioning.
-#' @param a A bandwidth. Default uses an asymmetric version using alpha.
+#' @param a A bandwidth. Defaults to Sheather and Jones selection wrt marginal.
 #' @param p An integer representing the number of states. The absorbing state is last.
-#' @param alpha A probability around the point x, for asymmetric sub-sampling.
 #' @param collapse Logical, whether to collapse the last state of the model.
 #'
 #' @return A list containing the Aalen-Johansen estimator, the Nelson-Aalen estimator, and related quantities.
@@ -30,13 +29,11 @@ aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, col
   if(is_unconditional){relevant_data <- 1:n}else{
     X <- unlist(lapply(data, FUN = function(Z) Z$X))
     if(is.null(a)){
-      pvl <- ecdf(X)(x)
-      upper <- quantile(X, min(1,pvl + alpha/2))
-      lower <- quantile(X, max(0,pvl - alpha/2))
-      relevant_data <- which((X<=upper)&(X>=lower))
-    }else{
-      relevant_data <- which(((x - X)/a<=1/2)&((x - X)/a>=-1/2))
+      kde <- density(X, bw = "SJ")
+      bw <- kde$bw
+      a <- 2 * sqrt(3) * bw
     }
+    relevant_data <- which(((x - X)/a<=1/2)&((x - X)/a>=-1/2))
   }
   data_x <- data[relevant_data]
   prop <- length(relevant_data)/n
