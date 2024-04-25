@@ -5,11 +5,12 @@
 #' @param a A bandwidth. Defaults to Sheather and Jones selection wrt marginal.
 #' @param p An integer representing the number of states. The absorbing state is last.
 #' @param collapse Logical, whether to collapse the last state of the model.
+#' @param weights A vector of observation weights.
 #'
 #' @return A list containing the Aalen-Johansen estimator, the Nelson-Aalen estimator, and related quantities.
 #' @export
 #'
-aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, collapse = FALSE){
+aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, collapse = FALSE, weights = NULL){
 
   # Determine left-truncation, and create possible augmented model
   L_tr <- sum(unlist(lapply(data, FUN = function(Z) Z$times[1]>0 ))) > 0
@@ -40,6 +41,13 @@ aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, col
   n_x <- length(data_x)
   if(is.null(p)) p <- max(unique(unlist(lapply(data_x, function(Z) Z$states)))) - 1
 
+  # Determine weights
+  if(is.null(weights)){
+    weights <- rep(1, n_x)
+  }else{
+    weights <- weights[relevant_data]
+  }
+
   # Initialize output lists
   out <- out2 <- list()
 
@@ -47,8 +55,6 @@ aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, col
   R_times <- unlist(lapply(data_x, FUN = function(Z) tail(Z$times,1)))
   t_pool <- unlist(lapply(data_x, FUN = function(Z) Z$times[-1]))
 
-  #R_times <- unlist(lapply(data_x, FUN = function(Z) sum(Z$sojourns)))
-  #t_pool <- unlist(lapply(data_x, FUN = function(Z) cumsum(Z$sojourns)))
   individuals <- c()
   for(i in 1:n_x){
     individuals <- c(individuals,rep(i,length(data_x[[i]]$times[-1])))
@@ -66,15 +72,15 @@ aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, col
   ordered_jumps <- jumps_pool[order_of_times,]
   ordered_N <- rep(list(matrix(0,p+1,p+1)),nrow(ordered_jumps))
   for(i in 1:nrow(ordered_jumps)){
-    ordered_N[[i]][ordered_jumps[i,][1],ordered_jumps[i,][2]] <- 1
+    ordered_N[[i]][ordered_jumps[i,][1],ordered_jumps[i,][2]] <- 1 * weights[ordered_individuals[i + 1]]
   }
   ordered_N <- lapply(ordered_N, FUN = function(Z) Z - diag(diag(Z)))
   colsums_of_N <- lapply(ordered_N,function(N)colSums(N-t(N)))
 
   # Compute out and out2
-  out[[1]] <- ordered_N[[1]]*n^{-1}/prop
+  out[[1]] <- ordered_N[[1]] * n^{-1}/prop
   for(tm in 2:(length(ordered_times)-1)){
-    out[[tm]] <- out[[tm - 1]] + ordered_N[[tm]]*n^{-1}/prop
+    out[[tm]] <- out[[tm - 1]] + ordered_N[[tm]] * n^{-1}/prop
   }
   #
   decisions <- ordered_times %in% R_times
@@ -90,6 +96,7 @@ aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, col
 
   # Extract initial status for each individual
   I_initial <-  lapply(data_x, FUN = function(Z) as.numeric(1:(p+1) == head(Z$states,1)))
+  I_initial <- mapply("*", I_initial, as.list(weights), SIMPLIFY = FALSE)
 
   # Compute initial rate for all individuals
   I0 <- Reduce("+", I_initial) * n^{-1}/prop
@@ -133,7 +140,7 @@ aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, col
 
   # Compute the Aalen-Johansen estimator using difference equations
   aj <- list()
-  if(L_tr){I0[1] <- 0; I0 <- I0/sum(I0)}
+  #if(L_tr){I0[1] <- 0; I0 <- I0/sum(I0)}
   aj[[1]] <- I0
   Delta <- cumsums[[1]]
   aj[[2]] <- aj[[1]] + as.vector(aj[[1]] %*% Delta) - aj[[1]] * rowSums(Delta)
@@ -146,10 +153,10 @@ aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, col
   cumsums <- append(list(matrix(0,p+1,p+1)),lapply(cumsums, FUN = function(M){M_out <- M; diag(M_out) <- -rowSums(M); M_out}))
 
   # Final touch on left-truncation
-  if(L_tr){
-    aj <- lapply(aj, FUN = function(Z) Z[-1])
-    cumsums <- lapply(cumsums, FUN = function(Z) Z[-1,-1])
-  }
+  # if(L_tr){
+  #   aj <- lapply(aj, FUN = function(Z) (Z/(1-Z[1]))[-1])
+  #   cumsums <- lapply(cumsums, FUN = function(Z) Z[-1,-1]) # something needed here
+  # }
 
   # Return output as a list
   return(list(p = aj, Lambda = cumsums, N = out, I0 = I0, It = It, t = ordered_times))
