@@ -164,5 +164,5 @@ aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, col
   # }
   
   # Return output as a list
-  return(list(p = aj, Lambda = cumsums, N = out, I0 = I0, It = It, t = ordered_times))
+  return(list(p = aj, Lambda = cumsums, N = out, I0 = I0, It = It, t = ordered_times, effective_size = n_x))
 }
