@@ -92,7 +92,7 @@ aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, col
   }
   for(tm in 2:(length(ordered_times)-1)){
     out2[[tm]] <- out2[[tm - 1]] + colsums_of_N[[tm]] * n^{-1}/prop
-    if(decisions[tm]+1){
+    if(decisions[tm+1]){
       wch <- ordered_individuals[tm+1]
       end_state <- as.numeric(1:(p+1) == tail(data_x[[wch]]$states,1))
       out2[[tm]] <- out2[[tm]] - end_state * n^{-1}/prop
