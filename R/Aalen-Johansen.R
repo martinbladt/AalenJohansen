@@ -158,10 +158,10 @@ aalen_johansen <- function(data, x = NULL, a = NULL, p = NULL, alpha = 0.05, col
   cumsums <- append(list(matrix(0,p+1,p+1)),lapply(cumsums, FUN = function(M){M_out <- M; diag(M_out) <- -rowSums(M); M_out}))
   
   # Final touch on left-truncation
-  # if(L_tr){
-  #   aj <- lapply(aj, FUN = function(Z) (Z/(1-Z[1]))[-1])
-  #   cumsums <- lapply(cumsums, FUN = function(Z) Z[-1,-1]) # something needed here
-  # }
+  if(L_tr){
+    aj <- lapply(aj, FUN = function(Z) (Z/(1-Z[1]))[-1])
+    cumsums <- lapply(cumsums, FUN = function(Z) Z[-1,-1])
+  }
   
   # Return output as a list
   return(list(p = aj, Lambda = cumsums, N = out, I0 = I0, It = It, t = ordered_times, effective_size = n_x))
