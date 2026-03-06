@@ -8,9 +8,10 @@ aalen_johansen(
   data,
   x = NULL,
   a = NULL,
+  k = NULL,
   p = NULL,
-  alpha = 0.05,
-  collapse = FALSE
+  collapse = FALSE,
+  weights = NULL
 )
 }
 \arguments{
@@ -18,13 +19,15 @@ aalen_johansen(
 
 \item{x}{A numeric value for conditioning.}
 
-\item{a}{A bandwidth. Default uses an asymmetric version using alpha.}
+\item{a}{A bandwidth. Defaults to Sheather and Jones selection wrt marginal.}
+
+\item{k}{Number of nearest neighbours (alternative to kernel).}
 
 \item{p}{An integer representing the number of states. The absorbing state is last.}
 
-\item{alpha}{A probability around the point x, for asymmetric sub-sampling.}
-
 \item{collapse}{Logical, whether to collapse the last state of the model.}
+
+\item{weights}{A vector of observation weights.}
 }
 \value{
 A list containing the Aalen-Johansen estimator, the Nelson-Aalen estimator, and related quantities.
